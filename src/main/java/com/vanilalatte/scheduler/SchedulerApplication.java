@@ -2,12 +2,14 @@ package com.vanilalatte.scheduler;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
+@EnableJpaAuditing
 @SpringBootApplication
-public class SchedulerSpartCh3Application {
+public class SchedulerApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(SchedulerSpartCh3Application.class, args);
+        SpringApplication.run(SchedulerApplication.class, args);
     }
 
 }
