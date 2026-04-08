@@ -3,12 +3,16 @@ package com.vanilalatte.scheduler.service;
 import com.vanilalatte.scheduler.dto.CreateScheduleRequest;
 import com.vanilalatte.scheduler.dto.CreateScheduleResponse;
 import com.vanilalatte.scheduler.dto.GetScheduleResponse;
+import com.vanilalatte.scheduler.dto.UpdateSchedulerRequest;
+import com.vanilalatte.scheduler.dto.UpdateSchedulerResponse;
 import com.vanilalatte.scheduler.entity.Schedule;
 import com.vanilalatte.scheduler.repository.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +45,7 @@ public class ScheduleService {
     @Transactional(readOnly = true)
     public GetScheduleResponse findOne(Long scheduleId) {
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(
-                () -> new IllegalStateException("해당 일정이 없습니다.")
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 일정이 없습니다.")
         );
         return new GetScheduleResponse(
                 schedule.getId(),
@@ -76,5 +80,25 @@ public class ScheduleService {
             ));
         }
         return dtos;
+    }
+
+    @Transactional
+    public UpdateSchedulerResponse updateSchedule(Long scheduleId, UpdateSchedulerRequest request) {
+        Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 일정이 없습니다.")
+        );
+
+        if (!schedule.getPassword().equals(request.getPassword())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "비밀번호가 일치하지 않습니다.");
+        }
+
+        schedule.updateSchedule(request.getTitle(), request.getWriter());
+
+        return new UpdateSchedulerResponse(
+                schedule.getId(),
+                schedule.getTitle(),
+                schedule.getWriter(),
+                schedule.getModifiedAt()
+        );
     }
 }

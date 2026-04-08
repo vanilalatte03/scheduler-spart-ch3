@@ -1,8 +1,6 @@
 package com.vanilalatte.scheduler.controller;
 
-import com.vanilalatte.scheduler.dto.CreateScheduleRequest;
-import com.vanilalatte.scheduler.dto.CreateScheduleResponse;
-import com.vanilalatte.scheduler.dto.GetScheduleResponse;
+import com.vanilalatte.scheduler.dto.*;
 import com.vanilalatte.scheduler.service.ScheduleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -28,8 +26,16 @@ public class ScheduleController {
     }
 
     @GetMapping("/schedules")
-    public ResponseEntity<List<GetScheduleResponse>> getSchedules(@RequestParam(required = false) String writer){
+    public ResponseEntity<List<GetScheduleResponse>> getSchedules(@RequestParam(required = false) String writer) {
         return ResponseEntity.status(HttpStatus.OK).body(scheduleService.findAll(writer));
+    }
+
+    @PutMapping("/schedules/{scheduleId}")
+    public ResponseEntity<UpdateSchedulerResponse> updateSchedules(
+            @PathVariable Long scheduleId,
+            @RequestBody UpdateSchedulerRequest request
+    ) {
+        return ResponseEntity.status(HttpStatus.OK).body(scheduleService.updateSchedule(scheduleId,request));
     }
 
 }
