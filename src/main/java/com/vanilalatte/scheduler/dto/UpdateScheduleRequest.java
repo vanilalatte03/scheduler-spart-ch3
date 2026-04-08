@@ -3,7 +3,7 @@ package com.vanilalatte.scheduler.dto;
 import lombok.Getter;
 
 @Getter
-public class UpdateSchedulerRequest {
+public class UpdateScheduleRequest {
 
     private String title;
     private String writer;
