@@ -160,6 +160,11 @@ public class ScheduleService {
 
     @Transactional
     public void delete(Long scheduleId, DeleteScheduleRequest request) {
+
+        if (request.getPassword() == null || request.getPassword().isBlank()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "비밀번호는 필수입니다.");
+        }
+
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 일정이 없습니다.")
         );
