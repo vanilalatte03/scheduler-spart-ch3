@@ -24,6 +24,31 @@ public class ScheduleService {
 
     @Transactional
     public CreateScheduleResponse save(CreateScheduleRequest request) {
+
+        if (request.getTitle() == null || request.getTitle().isBlank()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "일정 제목은 필수입니다.");
+        }
+
+        if (request.getTitle().length() > 30) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "일정 제목은 30자 이하여야 합니다.");
+        }
+
+        if (request.getContent() == null || request.getContent().isBlank()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "일정 내용은 필수입니다.");
+        }
+
+        if (request.getContent().length() > 200) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "일정 내용은 200자 이하여야 합니다.");
+        }
+
+        if (request.getPassword() == null || request.getPassword().isBlank()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "비밀번호는 필수입니다.");
+        }
+
+        if (request.getWriter() == null || request.getWriter().isBlank()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "작성자는 필수입니다.");
+        }
+
         Schedule schedule = new Schedule(
                 request.getTitle(),
                 request.getContent(),
@@ -98,6 +123,23 @@ public class ScheduleService {
 
     @Transactional
     public UpdateScheduleResponse updateSchedule(Long scheduleId, UpdateScheduleRequest request) {
+
+        if (request.getTitle() == null || request.getTitle().isBlank()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "일정 제목은 필수입니다.");
+        }
+
+        if (request.getTitle().length() > 30) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "일정 제목은 30자 이하여야 합니다.");
+        }
+
+        if (request.getPassword() == null || request.getPassword().isBlank()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "비밀번호는 필수입니다.");
+        }
+
+        if (request.getWriter() == null || request.getWriter().isBlank()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "작성자는 필수입니다.");
+        }
+
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 일정이 없습니다.")
         );

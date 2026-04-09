@@ -22,12 +22,28 @@ public class CommentService {
     @Transactional
     public CreateCommentResponse save(Long scheduleId, CreateCommentRequest request) {
 
+        if (request.getContent() == null || request.getContent().isBlank()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "댓글 내용은 필수입니다.");
+        }
+        if (request.getContent().length() > 100) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "댓글은 100자 이하여야 합니다.");
+        }
+
+        if (request.getPassword() == null || request.getPassword().isBlank()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "비밀번호는 필수입니다.");
+        }
+
+        if (request.getWriter() == null || request.getWriter().isBlank()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "작성자는 필수입니다.");
+        }
+
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 일정이 존재하지 않습니다."));
 
         long commentCount = commentRepository.countByScheduleId(scheduleId);
+
         if (commentCount >= 10) {
-            throw new IllegalArgumentException("댓글은 최대 10개까지만 작성할 수 있습니다.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "댓글은 최대 10개까지만 작성할 수 있습니다.");
         }
 
         Comment comment = new Comment(
