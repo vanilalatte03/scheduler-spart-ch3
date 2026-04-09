@@ -3,10 +3,12 @@ package com.vanilalatte.scheduler.dto;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
+/**
+ * 일정 전체 조회용 DTO
+ */
 @Getter
-public class GetScheduleResponse {
+public class GetScheduleListResponse {
 
     private final Long id;
     private final String title;
@@ -14,16 +16,13 @@ public class GetScheduleResponse {
     private final String writer;
     private final LocalDateTime createdAt;
     private final LocalDateTime modifiedAt;
-    private final List<GetCommentResponse> comments;
 
-
-    public GetScheduleResponse(Long id, String title, String content, String writer, LocalDateTime createdAt, LocalDateTime modifiedAt, List<GetCommentResponse> comments) {
+    public GetScheduleListResponse(Long id, String title, String content, String writer, LocalDateTime createdAt, LocalDateTime modifiedAt) {
         this.id = id;
         this.title = title;
         this.content = content;
         this.writer = writer;
         this.createdAt = createdAt;
         this.modifiedAt = modifiedAt;
-        this.comments = comments;
     }
 }

@@ -1,7 +1,9 @@
 package com.vanilalatte.scheduler.service;
 
 import com.vanilalatte.scheduler.dto.*;
+import com.vanilalatte.scheduler.entity.Comment;
 import com.vanilalatte.scheduler.entity.Schedule;
+import com.vanilalatte.scheduler.repository.CommentRepository;
 import com.vanilalatte.scheduler.repository.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
@@ -18,6 +20,7 @@ import java.util.List;
 public class ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
+    private final CommentRepository commentRepository;
 
     @Transactional
     public CreateScheduleResponse save(CreateScheduleRequest request) {
@@ -43,18 +46,33 @@ public class ScheduleService {
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 일정이 없습니다.")
         );
+
+        List<Comment> comments = commentRepository.findAllByScheduleId(scheduleId);
+        List<GetCommentResponse> getCommentResponses = new ArrayList<>();
+        for(Comment comment : comments){
+            getCommentResponses.add(new GetCommentResponse(
+                    comment.getId(),
+                    comment.getScheduleId(),
+                    comment.getContent(),
+                    comment.getWriter(),
+                    comment.getCreatedAt(),
+                    comment.getModifiedAt()
+            ));
+        }
+
         return new GetScheduleResponse(
                 schedule.getId(),
                 schedule.getTitle(),
                 schedule.getContent(),
                 schedule.getWriter(),
                 schedule.getCreatedAt(),
-                schedule.getModifiedAt()
+                schedule.getModifiedAt(),
+                getCommentResponses
         );
     }
 
     @Transactional(readOnly = true)
-    public List<GetScheduleResponse> findAll(String writer) {
+    public List<GetScheduleListResponse> findAll(String writer) {
         Sort sort = Sort.by(Sort.Direction.DESC, "modifiedAt");
 
         List<Schedule> schedules;
@@ -64,9 +82,9 @@ public class ScheduleService {
             schedules = scheduleRepository.findByWriter(writer, sort);
         }
 
-        List<GetScheduleResponse> dtos = new ArrayList<>();
+        List<GetScheduleListResponse> dtos = new ArrayList<>();
         for (Schedule schedule : schedules) {
-            dtos.add(new GetScheduleResponse(
+            dtos.add(new GetScheduleListResponse(
                     schedule.getId(),
                     schedule.getTitle(),
                     schedule.getContent(),
