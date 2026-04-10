@@ -5,6 +5,9 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+/**
+ * 일정에 등록되는 댓글 도메인을 표현하는 엔티티다.
+ */
 @Getter
 @Entity
 @Table(name = "comments")
@@ -26,6 +29,15 @@ public class Comment extends BaseEntity{
     @Column(nullable = false, length = 20)
     private String password;
 
+    /**
+     * 댓글 엔티티를 생성한다.
+     * 현재 구현은 일정과의 연관관계를 객체 참조 대신 scheduleId 값으로 보관한다.
+     *
+     * @param scheduleId 댓글이 속한 일정 ID
+     * @param content 댓글 내용
+     * @param writer 작성자명
+     * @param password 댓글 생성 시 입력한 비밀번호
+     */
     public Comment(Long scheduleId, String content, String writer, String password){
         this.scheduleId = scheduleId;
         this.content = content;

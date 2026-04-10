@@ -19,6 +19,16 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final ScheduleRepository scheduleRepository;
 
+
+    /**
+     * 댓글을 생성한다.
+     * 하나의 일정에는 최대 10개의 댓글만 등록할 수 있다.
+     *
+     * @param scheduleId 댓글을 등록할 일정 ID
+     * @param request 댓글 내용, 작성자, 비밀번호를 포함한 생성 요청
+     * @return 생성된 댓글 정보
+     * @throws ResponseStatusException 입력값이 유효하지 않으면 400, 일정이 없으면 404를 발생시킨다
+     */
     @Transactional
     public CreateCommentResponse save(Long scheduleId, CreateCommentRequest request) {
 

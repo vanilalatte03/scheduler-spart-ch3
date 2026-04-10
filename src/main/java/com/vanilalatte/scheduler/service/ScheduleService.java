@@ -22,6 +22,13 @@ public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
     private final CommentRepository commentRepository;
 
+    /**
+     * 일정을 생성한다.
+     *
+     * @param request 일정 제목, 내용, 작성자, 비밀번호를 포함한 생성 요청
+     * @return 생성된 일정 정보
+     * @throws ResponseStatusException 제목/내용/작성자/비밀번호가 비어 있거나 길이 제한을 초과하면 400 Bad Request를 발생시킨다
+     */
     @Transactional
     public CreateScheduleResponse save(CreateScheduleRequest request) {
 
@@ -66,6 +73,15 @@ public class ScheduleService {
         );
     }
 
+
+    /**
+     * 일정 상세 정보를 조회한다.
+     * 조회 결과에는 해당 일정에 등록된 댓글 목록이 함께 포함된다.
+     *
+     * @param scheduleId 조회할 일정 ID
+     * @return 일정 본문과 댓글 목록을 포함한 응답
+     * @throws ResponseStatusException 일정이 존재하지 않으면 404 Not Found를 발생시킨다
+     */
     @Transactional(readOnly = true)
     public GetScheduleResponse findOne(Long scheduleId) {
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(
@@ -96,6 +112,13 @@ public class ScheduleService {
         );
     }
 
+    /**
+     * 일정 목록을 조회한다.
+     * 작성자명이 주어지면 해당 작성자의 일정만 수정일 내림차순으로 반환한다.
+     *
+     * @param writer 조회할 작성자명, 비어 있으면 전체 일정을 조회한다
+     * @return 수정일 내림차순으로 정렬된 일정 목록
+     */
     @Transactional(readOnly = true)
     public List<GetScheduleListResponse> findAll(String writer) {
         Sort sort = Sort.by(Sort.Direction.DESC, "modifiedAt");
@@ -121,6 +144,15 @@ public class ScheduleService {
         return dtos;
     }
 
+    /**
+     * 일정의 제목과 작성자를 수정한다.
+     * 비밀번호가 일치해야 하며 내용과 비밀번호는 변경하지 않는다.
+     *
+     * @param scheduleId 수정할 일정 ID
+     * @param request 변경할 제목, 작성자, 비밀번호를 포함한 수정 요청
+     * @return 수정된 일정 정보
+     * @throws ResponseStatusException 제목/작성자/비밀번호가 유효하지 않으면 400, 일정이 없으면 404, 비밀번호가 일치하지 않으면 403을 발생시킨다
+     */
     @Transactional
     public UpdateScheduleResponse updateSchedule(Long scheduleId, UpdateScheduleRequest request) {
 
@@ -158,6 +190,14 @@ public class ScheduleService {
         );
     }
 
+    /**
+     * 일정을 삭제한다.
+     * 삭제 요청에는 일정 생성 시 사용한 비밀번호가 포함되어야 한다.
+     *
+     * @param scheduleId 삭제할 일정 ID
+     * @param request 비밀번호를 포함한 삭제 요청
+     * @throws ResponseStatusException 비밀번호가 비어 있으면 400, 일정이 없으면 404, 비밀번호가 일치하지 않으면 403을 발생시킨다
+     */
     @Transactional
     public void delete(Long scheduleId, DeleteScheduleRequest request) {
 

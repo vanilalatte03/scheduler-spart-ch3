@@ -17,6 +17,13 @@ public class CommentController {
 
     private final CommentService commentService;
 
+    /**
+     * 일정에 댓글을 등록하는 요청을 처리한다.
+     *
+     * @param scheduleId 댓글을 등록할 일정 ID
+     * @param request 댓글 생성 요청 본문
+     * @return 생성된 댓글 정보와 201 Created 응답
+     */
     @PostMapping("/schedules/{scheduleId}/comments")
     public ResponseEntity<CreateCommentResponse> createComment(@PathVariable Long scheduleId, @RequestBody CreateCommentRequest request){
         return ResponseEntity.status(HttpStatus.CREATED).body(commentService.save(scheduleId, request));
