@@ -12,7 +12,7 @@ POST /schedules
 
 ### Request Body
 
-```
+```json
 {
   "title":"회의 준비",
   "content":"프로젝트 회의 자료 정리",
@@ -30,7 +30,7 @@ POST /schedules
 
 ### Response Body
 
-```
+```json
 {
   "id":1,
   "title":"회의 준비",
@@ -74,7 +74,7 @@ GET /schedules?writer=지호
 
 ### Response Body 예시
 
-```
+```json
 [
   {
     "id":3,
@@ -123,7 +123,7 @@ GET /schedules/{id}
 
 ### Response Body
 
-```
+```json
 {
   "id":1,
   "title":"회의 준비",
@@ -180,7 +180,7 @@ PUT /schedules/{id}
 
 ### Request Body
 
-```
+```json
 {
   "title":"회의 자료 최종 점검",
   "writer":"지호",
@@ -195,7 +195,7 @@ PUT /schedules/{id}
 
 ### Response Body
 
-```
+```json
 {
   "id":1,
   "title":"회의 자료 최종 점검",
@@ -232,7 +232,7 @@ DELETE /schedules/{id}
 
 ### Request Body
 
-```
+```json
 {
   "password":"1234"
 }
@@ -272,7 +272,7 @@ POST /schedules/{scheduleId}/comments
 
 ### Request Body
 
-```
+```json
 {
   "content":"회의 자료 정리 잘 부탁드립니다.",
   "writer":"지호",
@@ -282,7 +282,7 @@ POST /schedules/{scheduleId}/comments
 
 ### Response Body
 
-```
+```json
 {
   "id":1,
   "scheduleId":1,
